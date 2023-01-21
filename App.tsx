@@ -4,7 +4,6 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { DateButton } from './components/DateButton';
 import { Header } from './components/Header';
 import { Label } from './components/Label';
-import { Row } from './components/Row';
 
 export default function App() {
   const [startDate, setStartDate] = useState(new Date(1641013200 * 1000));
