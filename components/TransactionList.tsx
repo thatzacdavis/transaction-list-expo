@@ -45,20 +45,13 @@ export const TransactionList = () => {
       `https://assignment.alza.app/transactions?dateGTE=${
         startDate.getTime() / 1000
       }&dateLTE=${endDate.getTime() / 1000}${
-        !!pageParam ? `&startingAfter=${pageParam}` : ""
+        pageParam ? `&startingAfter=${pageParam}` : ""
       }`
     );
     return response.json();
   };
 
-  const {
-    data,
-    fetchNextPage,
-    isFetchingNextPage,
-    isLoading,
-    refetch,
-    isFetching,
-  } = useInfiniteQuery(
+  const { data, fetchNextPage, isLoading, refetch } = useInfiniteQuery(
     "transactions",
     async ({ pageParam }) => fetchTransactions(pageParam),
     {
