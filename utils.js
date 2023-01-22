@@ -6,6 +6,10 @@ export const computeTransactionBadgeColor = (title) => {
             return '#E3655B'
         case 'entertainment':
             return '#6DD6DA'
+        case 'food':
+            return '#EF946C'
+        case 'refunded':
+            return '#BCACFB'
     }
     return '#596157'
 }

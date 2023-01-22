@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     },
 })
 
-export const TransactionCard = ({ title, description, amount, date, tags }) => {
-    const displayDate = useMemo(() => new Date(date).toLocaleDateString(), [date])
+export const TransactionCard = ({ id, title, description, amount, date, tags }) => {
+    const displayDate = useMemo(() => new Date(date * 1000).toLocaleDateString(), [date])
 
     return (
         <Card>
@@ -43,7 +43,8 @@ export const TransactionCard = ({ title, description, amount, date, tags }) => {
                     <Text style={styles.amountColumnItem}>{displayDate}</Text>
                     <View style={styles.amountColumnItem}>
                         {tags.map((tag, index) => (
-                            <Badge 
+                            <Badge
+                                key={`${id}-${tag}`}
                                 value={tag}
                                 textStyle={{ fontSize: 12, margin: 4 }}
                                 badgeStyle={{ backgroundColor: computeTransactionBadgeColor(tag), height: 24 }}
