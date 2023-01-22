@@ -1,0 +1,29 @@
+{
+    "transactions": [
+      {
+        "id": "transaction_0",
+        "amount": 55353,
+        "currency": "usd",
+        "date": 1670436552,
+        "title": "Code-N",
+        "description": "Est delectus eum voluptatem a.",
+        "tags": [
+          "declined",
+          "entertainment"
+        ]
+      },
+      {
+        "id": "transaction_1",
+        "amount": 31847,
+        "currency": "usd",
+        "date": 1645409147,
+        "title": "Equilar",
+        "description": "Praesentium corrupti ab dolores excepturi.",
+        "tags": [
+          "posted",
+          "other"
+        ]
+      }
+    ],
+    "hasMore": true
+  }

@@ -4,6 +4,9 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { DateButton } from './components/DateButton';
 import { Header } from './components/Header';
 import { Label } from './components/Label';
+import { TransactionCard } from './components/TransactionCard';
+
+import payload from './payload.json'
 
 export default function App() {
   const [startDate, setStartDate] = useState(new Date(1641013200 * 1000));
@@ -12,7 +15,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <Header amountFound={0} />
+      <Header amountFound={payload.transactions.length} />
       <View testID='DateRow' style={styles.dateRow}>
         <View testID='FromDateColumn' style={styles.dateColumn}>
           <View testID='FromDateColumnRow' style={styles.dateColumnRow}>
@@ -27,6 +30,13 @@ export default function App() {
           </View>
         </View>
       </View>
+      <TransactionCard
+        title={payload.transactions[0].title}
+        description={payload.transactions[0].description}
+        amount={payload.transactions[0].amount}
+        date={payload.transactions[0].date}
+        tags={payload.transactions[0].tags}
+      />
     </SafeAreaView>
   );
 }
