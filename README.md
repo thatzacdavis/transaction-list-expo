@@ -4,6 +4,13 @@ This project uses the mock transactions API available at https://assignment.alza
 
 It also allows for filtering via a date range in the header above the list.
 
+It has been tested on an iOS simulator using [Expo Go](https://expo.dev/client).
+
+## Quick Start
+
+1. `yarn`
+1. `yarn ios`
+
 ## Libraries Used
 
 1. [Expo](https://docs.expo.dev/) - An easy way to bootstrap React Native apps.
