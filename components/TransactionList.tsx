@@ -1,5 +1,5 @@
 import { FlashList } from '@shopify/flash-list';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { DateButton } from './DateButton';
 import { Header } from './Header';
@@ -7,7 +7,7 @@ import { Label } from './Label';
 import { TransactionCard } from './TransactionCard';
 import { Divider } from '@rneui/themed';
 
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -17,7 +17,8 @@ const styles = StyleSheet.create({
     },
     listContainer: {
       flex: 1,
-      width: Dimensions.get('screen').width
+      width: Dimensions.get('screen').width,
+      height: Dimensions.get('screen').height,
     },
     dateColumn: {
       flexDirection: 'column',
@@ -38,11 +39,31 @@ export const TransactionList = () => {
     const [startDate, setStartDate] = useState(new Date(1641013200 * 1000)); // January 1, 2022
     const [endDate, setEndDate] = useState(new Date(1654056000 * 1000)); // June 1, 2022
 
-    const { isLoading, data, refetch } = useQuery('transactions', () =>
-        fetch(`https://assignment.alza.app/transactions?dateGTE=${startDate.getTime() / 1000}&dateLTE=${endDate.getTime() / 1000}`).then(res =>
-        res.json()
-        )
-    )
+    const fetchTransactions = async (pageParam) => {
+        const response = await fetch(`https://assignment.alza.app/transactions?dateGTE=${startDate.getTime() / 1000}&dateLTE=${endDate.getTime() / 1000}${!!pageParam ? `&startingAfter=${pageParam}` : ''}`)
+        return response.json()
+    }
+
+const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    refetch,
+    isFetching,
+    } = useInfiniteQuery('transactions', async ({ pageParam }) => fetchTransactions(pageParam), {
+        getNextPageParam: (lastPage) => {
+            // The last page might not have any results or might indicate that there will be no more results.
+            if (!lastPage || !lastPage.hasMore || !lastPage.transactions.length) return undefined
+    
+            return lastPage.transactions[lastPage.transactions.length - 1].id
+          },
+    })
+    
+
+    const transactions = useMemo(() => {
+        return data?.pages.reduce((acc, page) => acc.concat(page.transactions), []);
+    }, [data])
 
     useEffect(() => {
         refetch()
@@ -53,7 +74,7 @@ export const TransactionList = () => {
             {isLoading ? <ActivityIndicator /> : (
                 <>
                     <View style={styles.headerContainer}>
-                        <Header amountFound={data?.transactions?.length ?? 0} />
+                        <Header amountFound={transactions?.length ?? 0} />
                         <View testID='DateRow' style={styles.dateRow}>
                             <View testID='FromDateColumn' style={styles.dateColumn}>
                                 <View testID='FromDateColumnRow' style={styles.dateColumnRow}>
@@ -71,19 +92,27 @@ export const TransactionList = () => {
                     </View>
                     <Divider />
                     <FlashList
-                    data={data?.transactions}
-                    renderItem={({ item }) => (
-                        <TransactionCard
-                            id={item.id}
-                            title={item.title}
-                            description={item.description}
-                            amount={item.amount}
-                            date={item.date}
-                            tags={item.tags}
-                        />
-                    )}
-                    keyExtractor={(item) => `TransactionCard-${item.id}`}
-                    estimatedItemSize={15}
+                        data={transactions}
+                        renderItem={({ item }) => (
+                            <TransactionCard
+                                id={item.id}
+                                title={item.title}
+                                description={item.description}
+                                amount={item.amount}
+                                date={item.date}
+                                tags={item.tags}
+                            />
+                        )}
+                        keyExtractor={(item) => `TransactionCard-${item.id}`}
+                        estimatedItemSize={10}
+                        onEndReached={() => {
+                            if (!isFetchingNextPage && !isLoading && !isFetching) {
+                                fetchNextPage()
+                            }
+
+                        }}
+                        onEndReachedThreshold={0}
+                        refreshing={isFetchingNextPage}
                     />
                 </>
             )}
