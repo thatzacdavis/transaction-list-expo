@@ -1,16 +1,14 @@
-import { StyleSheet } from 'react-native';
-import { Text } from '@rneui/themed';
+import { StyleSheet } from "react-native";
+import { Text } from "@rneui/themed";
 
 const styles = StyleSheet.create({
-    label: {
-        marginTop: 8,
-        color: 'grey',
-        fontWeight: '500'
-    }
-})
+  label: {
+    marginTop: 8,
+    color: "grey",
+    fontWeight: "500",
+  },
+});
 
 export const Label = ({ text }) => {
-    return (
-        <Text style={styles.label}>{text}</Text>
-    )
-}
+  return <Text style={styles.label}>{text}</Text>;
+};
