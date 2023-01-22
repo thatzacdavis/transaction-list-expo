@@ -9,11 +9,13 @@ const styles = StyleSheet.create({
     },
     titleColumn: {
         flexDirection: 'column',
+        width: '70%'
     },
     amountColumn: {
         flexDirection: 'column',
         marginLeft: 16,
         alignItems: 'center',
+        width: '30%'
     },
     amountColumnItem: {
         marginVertical: 4,
@@ -40,11 +42,14 @@ export const TransactionCard = ({ title, description, amount, date, tags }) => {
                     <Text style={[styles.amountColumnItem, styles.amount]}>${amount}</Text>
                     <Text style={styles.amountColumnItem}>{displayDate}</Text>
                     <View style={styles.amountColumnItem}>
-                        <View style={styles.row}>
-                            {tags.map((tag, index) => (
-                                <Badge value={tag} textStyle={{ fontSize: 12, margin: 4 }} badgeStyle={{ backgroundColor: computeTransactionBadgeColor(tag), height: 24 }} containerStyle={{ paddingLeft: index > 0 ? 4 : undefined }} />
-                            ))}
-                        </View>
+                        {tags.map((tag, index) => (
+                            <Badge 
+                                value={tag}
+                                textStyle={{ fontSize: 12, margin: 4 }}
+                                badgeStyle={{ backgroundColor: computeTransactionBadgeColor(tag), height: 24 }}
+                                containerStyle={{ paddingLeft: index > 0 ? 4 : undefined, marginTop: index > 0 ? 4 : 0 }}
+                            />
+                        ))}
                     </View>
                 </View>
             </View>
