@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
 export const TransactionList = () => {
     const [startDate, setStartDate] = useState(new Date(1641013200 * 1000)); // January 1, 2022
     const [endDate, setEndDate] = useState(new Date(1654056000 * 1000)); // June 1, 2022
+    const [shouldCallOnScrollEnd, setShouldCallOnScrollEnd] = useState(false)
 
     const fetchTransactions = async (pageParam) => {
         const response = await fetch(`https://assignment.alza.app/transactions?dateGTE=${startDate.getTime() / 1000}&dateLTE=${endDate.getTime() / 1000}${!!pageParam ? `&startingAfter=${pageParam}` : ''}`)
@@ -105,14 +106,14 @@ const {
                         )}
                         keyExtractor={(item) => `TransactionCard-${item.id}`}
                         estimatedItemSize={10}
-                        onEndReached={() => {
-                            if (!isFetchingNextPage && !isLoading && !isFetching) {
+                        onEndReached={() => setShouldCallOnScrollEnd(true)}
+                        onMomentumScrollEnd={() => {
+                            if (shouldCallOnScrollEnd) {
+                                setShouldCallOnScrollEnd(false)
                                 fetchNextPage()
                             }
-
                         }}
-                        onEndReachedThreshold={0}
-                        refreshing={isFetchingNextPage}
+                        
                     />
                 </>
             )}
